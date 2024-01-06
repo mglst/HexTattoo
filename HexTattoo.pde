@@ -7,6 +7,7 @@ int mapsize = size_param*(size_param+1)*3+1;
 
 void setup() {
   size(700, 700);
+  pixelDensity(2);
   reset();
   //frameRate(5);
 }
