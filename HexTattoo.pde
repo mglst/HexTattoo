@@ -49,21 +49,14 @@ void draw() {
       }
       //for hex
       if(p.age % 2 == 0){
-        tattoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
-        tattoo.q.add(new Point(p.x-1, p.y, p));
-        tattoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.q, p.r - 1, p));
+        tattoo.q.add(new Point(p.q + 1, p.r, p));
+        tattoo.q.add(new Point(p.q - 1, p.r + 1, p));
       }else{
-        tattoo.q.add(new Point(p.x+1, p.y, p));
-        tattoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
-        tattoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.q + 1, p.r - 1, p));
+        tattoo.q.add(new Point(p.q, p.r + 1, p));
+        tattoo.q.add(new Point(p.q - 1, p.r, p));
       }
-      //for triangle
-      //tattoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
-      //tattoo.q.add(new Point(p.x-1, p.y, p));
-      //tattoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
-      //tattoo.q.add(new Point(p.x+1, p.y, p));
-      //tattoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
-      //tattoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
       if (p.parent != null) break;
     }
   }
@@ -71,8 +64,8 @@ void draw() {
 }
 
 int id(Point p) {
-  int r = floor(p.y * 2 / sqrt(3));
-  int q = floor(p.x - 0.5 * r);
+  int r = p.r;
+  int q = p.q;
   if ((q == 0) & (r == 0)) {
     return 0;
   }
@@ -101,31 +94,36 @@ boolean inBounds(Point p) {
 }
 
 class Point implements Comparable<Point> {
-  float x, y;
+  int q, r;
   int age;
   Point parent;
   float priority;
-  Point(float x, float y, Point parent) {
-    this.x = x;
-    this.y = y;
+  Point(int q, int r, Point parent) {
+    this.q = q;
+    this.r = r;
     this.parent = parent;
     if (parent == null) age = 0;
     else age = parent.age + 1;
 
-    priority = priority(this, x, y);
+    priority = priority(this, q, r);
   }
   int compareTo(Point other) {
     if (priority < other.priority) return -1;
     return 1;
   }
+  PVector toScreenSpace() {
+    return new PVector(q + 0.5 * r, sqrt(3)/2 * r);
+  }
 }
 
 void gradLine(Point p){
-  PVector v = new PVector((p.parent.x-p.x), (p.parent.y-p.y));
+  PVector p1 = p.toScreenSpace();
+  PVector p2 = p.parent.toScreenSpace();
+  PVector v = PVector.sub(p1,p2);
   for (int i=0; i<scale; i+=5){
     float sw = map(i, 0, scale, weight(p.age), weight(p.age-1));
     strokeWeight(sw);
-    line(p.x*scale+v.x*i, p.y*scale+v.y*i, p.x*scale+v.x*(i+5), p.y*scale+v.y*(i+5));
+    line(p1.x*scale+v.x*i, p1.y*scale+v.y*i, p1.x*scale+v.x*(i+5), p1.y*scale+v.y*(i+5));
   }
   //int r = floor(p.y * 2 / sqrt(3));
   //int q = floor(p.x - 0.5 * r);
