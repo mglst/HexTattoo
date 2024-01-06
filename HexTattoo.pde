@@ -127,11 +127,6 @@ void gradLine(Point p){
     strokeWeight(sw);
     line(p1.x*scale+v.x*i, p1.y*scale+v.y*i, p1.x*scale+v.x*(i+increment), p1.y*scale+v.y*(i+increment));
   }
-  //int r = floor(p.y * 2 / sqrt(3));
-  //int q = floor(p.x - 0.5 * r);
-  //textSize(30);
-  //fill(0);
-  //text(r+","+q, p.x*scale+30, p.y*scale+20);
 }
 
 float priority(Point p, float x, float y){
