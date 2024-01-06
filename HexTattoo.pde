@@ -1,8 +1,8 @@
 import java.util.PriorityQueue;
 import java.util.BitSet;
 
-float scale = 30;
-int size_param = 7; //indicates the size of the map
+float scale = 28;
+int size_param = 12; //indicates the size of the map
 int mapsize = size_param*(size_param+1)*3+1; 
 
 void setup() {
@@ -39,7 +39,7 @@ class Tattoo{
 void draw() {
   pushMatrix();
   translate(width*0.5, height*.5);
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 5; i++) {
     while (!tattoo.q.isEmpty()) {
       Point p = tattoo.q.poll();
       if (!inBounds(p)) continue;
@@ -121,10 +121,11 @@ void gradLine(Point p){
   PVector p1 = p.toScreenSpace();
   PVector p2 = p.parent.toScreenSpace();
   PVector v = PVector.sub(p2,p1);
-  for (int i=0; i<scale; i+=5){
+  int increment = 4;
+  for (int i=0; i<scale; i+=increment){
     float sw = map(i, 0, scale, weight(p.age), weight(p.age-1));
     strokeWeight(sw);
-    line(p1.x*scale+v.x*i, p1.y*scale+v.y*i, p1.x*scale+v.x*(i+5), p1.y*scale+v.y*(i+5));
+    line(p1.x*scale+v.x*i, p1.y*scale+v.y*i, p1.x*scale+v.x*(i+increment), p1.y*scale+v.y*(i+increment));
   }
   //int r = floor(p.y * 2 / sqrt(3));
   //int q = floor(p.x - 0.5 * r);
@@ -138,5 +139,5 @@ float priority(Point p, float x, float y){
 }
 
 float weight(int age){
-  return 1+0.5*scale*exp(-pow(age,2)/40);
+  return 1+0.5*scale*exp(-pow(age,2)/100);
 }
