@@ -76,7 +76,7 @@ int id(Point p) {
   if ((q == 0) & (r == 0)) {
     return 0;
   }
-  int L = (abs(q) + abs(r) + abs(q + r))/2;
+  int L = radius(p);
   int n = 3 * L * (L - 1);
   if (q == L) {
     return n + 6 * L + r;
@@ -94,6 +94,10 @@ int id(Point p) {
     return n + 3 * L - r;
   }
   return n + 4 * L + q;
+}
+
+int radius(Point p) {
+  return (abs(p.q) + abs(p.r) + abs(p.q + p.r))/2;
 }
 
 boolean inBounds(Point p) {
@@ -136,11 +140,13 @@ void gradLine(Point p) {
 }
 
 float priority(Point p) {
-  float randomness = 10.0;
+  float randomness = 1.0;
   float age_factor = 0.4;
-  float id_contribution = (id(p) % 10) * 0.0;
-  float direction_contribution = (p.parent != null && abs(p.q - p.parent.q) == 1 && p.r - p.parent.r == 0 ? 1 : 0) * -7.0;
-  return id_contribution + random(randomness) + p.age * age_factor + direction_contribution;
+  //float id_contribution = (id(p) % 10) * 10.0;
+  float id_contribution = (id(p) % 50 < 25 ? 1 : 0) * 0.0;
+  float direction_contribution = (p.parent != null && abs(p.q - p.parent.q) == 1 && p.r - p.parent.r == 0 ? 1 : 0) * 0.0;
+  float radius_contribution = radius(p) % 6 * 1;
+  return id_contribution + random(randomness) + p.age * age_factor + direction_contribution + radius_contribution;
 }
 
 float weight(int age) {
