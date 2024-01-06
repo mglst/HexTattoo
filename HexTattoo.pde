@@ -112,7 +112,7 @@ class Point implements Comparable<Point> {
     if (parent == null) age = 0;
     else age = parent.age + 1;
 
-    priority = priority(this, q, r);
+    priority = priority(this);
   }
   int compareTo(Point other) {
     if (priority < other.priority) return -1;
@@ -135,8 +135,8 @@ void gradLine(Point p) {
   }
 }
 
-float priority(Point p, float x, float y) {
-  return (dist(0, 0, x, y)+random(1));
+float priority(Point p) {
+  return (dist(0, 0, p.q, p.r)+random(1));
 }
 
 float weight(int age) {
