@@ -4,7 +4,7 @@ import java.util.BitSet;
 float scale = 14;
 int size_param = 24; //indicates the size of the map
 int mapsize = size_param*(size_param+1)*3+1;
-GridType gridType = GridType.Hexagons;
+GridType gridType = GridType.Triangles;
 
 void setup() {
   size(700, 700);
@@ -44,7 +44,7 @@ enum GridType {
 void draw() {
   pushMatrix();
   translate(width*0.5, height*.5);
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 14; i++) {
     while (!tattoo.q.isEmpty()) {
       Point p = tattoo.q.poll();
       if (!inBounds(p)) continue;
@@ -136,15 +136,13 @@ void gradLine(Point p) {
 }
 
 float priority(Point p) {
-  //return (dist(0, 0, p.q, p.r)+random(1));
-  //if (p.q > p.r) {
-  //  return 1;
-  //} else {
-  //  return 0;
-  //}
-  return (id(p) % 10) * 10 + random(10) + p.q * 0.1 + p.age * 0.4;
+  float randomness = 10.0;
+  float age_factor = 0.4;
+  float id_contribution = (id(p) % 10) * 0.0;
+  float direction_contribution = (p.parent != null && abs(p.q - p.parent.q) == 1 && p.r - p.parent.r == 0 ? 1 : 0) * -7.0;
+  return id_contribution + random(randomness) + p.age * age_factor + direction_contribution;
 }
 
 float weight(int age) {
-  return 1+0.5*scale*exp(-pow(age, 2)/100);
+  return 1+0.5*scale*exp(-pow(age, 2)/1000);
 }
