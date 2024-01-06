@@ -119,7 +119,7 @@ class Point implements Comparable<Point> {
 void gradLine(Point p){
   PVector p1 = p.toScreenSpace();
   PVector p2 = p.parent.toScreenSpace();
-  PVector v = PVector.sub(p1,p2);
+  PVector v = PVector.sub(p2,p1);
   for (int i=0; i<scale; i+=5){
     float sw = map(i, 0, scale, weight(p.age), weight(p.age-1));
     strokeWeight(sw);
