@@ -1,10 +1,10 @@
 import java.util.PriorityQueue;
 import java.util.BitSet;
 
-float scale = 28;
-int size_param = 12; //indicates the size of the map
+float scale = 14;
+int size_param = 24; //indicates the size of the map
 int mapsize = size_param*(size_param+1)*3+1;
-GridType gridType = GridType.Triangles;
+GridType gridType = GridType.Hexagons;
 
 void setup() {
   size(700, 700);
@@ -127,7 +127,7 @@ void gradLine(Point p) {
   PVector p1 = p.toScreenSpace();
   PVector p2 = p.parent.toScreenSpace();
   PVector v = PVector.sub(p2, p1);
-  int increment = 4;
+  int increment = 2;
   for (int i=0; i<scale; i+=increment) {
     float sw = map(i, 0, scale, weight(p.age), weight(p.age-1));
     strokeWeight(sw);
@@ -136,7 +136,13 @@ void gradLine(Point p) {
 }
 
 float priority(Point p) {
-  return (dist(0, 0, p.q, p.r)+random(1));
+  //return (dist(0, 0, p.q, p.r)+random(1));
+  //if (p.q > p.r) {
+  //  return 1;
+  //} else {
+  //  return 0;
+  //}
+  return (id(p) % 10) * 10 + random(10) + p.q * 0.1 + p.age * 0.4;
 }
 
 float weight(int age) {
