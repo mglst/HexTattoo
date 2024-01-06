@@ -47,9 +47,9 @@ void draw() {
   for (int i = 0; i < 14; i++) {
     while (!tattoo.q.isEmpty()) {
       Point p = tattoo.q.poll();
-      if (!inBounds(p)) continue;
-      if (tattoo.occupied.get(id(p))) continue;
-      tattoo.occupied.set(id(p));
+      if (!p.inBounds()) continue;
+      if (tattoo.occupied.get(p.id())) continue;
+      tattoo.occupied.set(p.id());
       if (p.parent != null) {
         gradLine(p);
       }
@@ -68,40 +68,6 @@ void draw() {
     }
   }
   popMatrix();
-}
-
-int id(Point p) {
-  int r = p.r;
-  int q = p.q;
-  if ((q == 0) & (r == 0)) {
-    return 0;
-  }
-  int L = radius(p);
-  int n = 3 * L * (L - 1);
-  if (q == L) {
-    return n + 6 * L + r;
-  }
-  if (q + r == L) {
-    return n + r;
-  }
-  if (r == L) {
-    return n + L - q;
-  }
-  if (q == -L) {
-    return n + 3 * L - r;
-  }
-  if (q + r == -L) {
-    return n + 3 * L - r;
-  }
-  return n + 4 * L + q;
-}
-
-int radius(Point p) {
-  return (abs(p.q) + abs(p.r) + abs(p.q + p.r))/2;
-}
-
-boolean inBounds(Point p) {
-  return id(p)<mapsize;
 }
 
 class Point implements Comparable<Point> {
@@ -125,6 +91,35 @@ class Point implements Comparable<Point> {
   PVector toScreenSpace() {
     return new PVector(q + 0.5 * r, sqrt(3)/2 * r);
   }
+  int radius() {
+    return (abs(q) + abs(r) + abs(q + r))/2;
+  }
+  int id() {
+    if ((q == 0) & (r == 0)) {
+      return 0;
+    }
+    int L = radius();
+    int n = 3 * L * (L - 1);
+    if (q == L) {
+      return n + 6 * L + r;
+    }
+    if (q + r == L) {
+      return n + r;
+    }
+    if (r == L) {
+      return n + L - q;
+    }
+    if (q == -L) {
+      return n + 3 * L - r;
+    }
+    if (q + r == -L) {
+      return n + 3 * L - r;
+    }
+    return n + 4 * L + q;
+  }
+  boolean inBounds() {
+    return id()<mapsize;
+  }
 }
 
 void gradLine(Point p) {
@@ -143,9 +138,9 @@ float priority(Point p) {
   float randomness = 1.0;
   float age_factor = 0.4;
   //float id_contribution = (id(p) % 10) * 10.0;
-  float id_contribution = (id(p) % 50 < 25 ? 1 : 0) * 0.0;
+  float id_contribution = (p.id() % 50 < 25 ? 1 : 0) * 0.0;
   float direction_contribution = (p.parent != null && abs(p.q - p.parent.q) == 1 && p.r - p.parent.r == 0 ? 1 : 0) * 0.0;
-  float radius_contribution = radius(p) % 6 * 1;
+  float radius_contribution = p.radius() % 8 * -100;
   return id_contribution + random(randomness) + p.age * age_factor + direction_contribution + radius_contribution;
 }
 
