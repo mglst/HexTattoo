@@ -5,7 +5,7 @@ float scale = 28;
 int size_param = 12; //indicates the size of the map
 int mapsize = size_param*(size_param+1)*3+1; 
 
-void setup() {
+  void setup() {
   size(700, 700);
   pixelDensity(2);
   reset();
@@ -18,7 +18,7 @@ void reset() {
 }
 
 void keyPressed() {
-  if(key == 's'){
+  if (key == 's') {
     save("tattoo"+hour()+minute()+second()+".png");
   }
   reset();
@@ -26,10 +26,10 @@ void keyPressed() {
 
 Tattoo tattoo;
 
-class Tattoo{
+class Tattoo {
   BitSet occupied;
   PriorityQueue<Point> q;
-  Tattoo(){
+  Tattoo() {
     occupied = new BitSet(mapsize);
     q = new PriorityQueue<Point>();
     q.add(new Point(0, 0, null));
@@ -49,11 +49,11 @@ void draw() {
         gradLine(p);
       }
       //for hex
-      if(p.age % 2 == 0){
+      if (p.age % 2 == 0) {
         tattoo.q.add(new Point(p.q, p.r - 1, p));
         tattoo.q.add(new Point(p.q + 1, p.r, p));
         tattoo.q.add(new Point(p.q - 1, p.r + 1, p));
-      }else{
+      } else {
         tattoo.q.add(new Point(p.q + 1, p.r - 1, p));
         tattoo.q.add(new Point(p.q, p.r + 1, p));
         tattoo.q.add(new Point(p.q - 1, p.r, p));
@@ -117,22 +117,22 @@ class Point implements Comparable<Point> {
   }
 }
 
-void gradLine(Point p){
+void gradLine(Point p) {
   PVector p1 = p.toScreenSpace();
   PVector p2 = p.parent.toScreenSpace();
-  PVector v = PVector.sub(p2,p1);
+  PVector v = PVector.sub(p2, p1);
   int increment = 4;
-  for (int i=0; i<scale; i+=increment){
+  for (int i=0; i<scale; i+=increment) {
     float sw = map(i, 0, scale, weight(p.age), weight(p.age-1));
     strokeWeight(sw);
     line(p1.x*scale+v.x*i, p1.y*scale+v.y*i, p1.x*scale+v.x*(i+increment), p1.y*scale+v.y*(i+increment));
   }
 }
 
-float priority(Point p, float x, float y){
+float priority(Point p, float x, float y) {
   return (dist(0, 0, x, y)+random(1));
 }
 
-float weight(int age){
-  return 1+0.5*scale*exp(-pow(age,2)/100);
+float weight(int age) {
+  return 1+0.5*scale*exp(-pow(age, 2)/100);
 }
