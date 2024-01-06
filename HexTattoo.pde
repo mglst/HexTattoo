@@ -3,9 +3,10 @@ import java.util.BitSet;
 
 float scale = 28;
 int size_param = 12; //indicates the size of the map
-int mapsize = size_param*(size_param+1)*3+1; 
+int mapsize = size_param*(size_param+1)*3+1;
+GridType gridType = GridType.Triangles;
 
-  void setup() {
+void setup() {
   size(700, 700);
   pixelDensity(2);
   reset();
@@ -36,6 +37,10 @@ class Tattoo {
   }
 }
 
+enum GridType {
+  Triangles, Hexagons
+}
+
 void draw() {
   pushMatrix();
   translate(width*0.5, height*.5);
@@ -49,11 +54,12 @@ void draw() {
         gradLine(p);
       }
       //for hex
-      if (p.age % 2 == 0) {
+      if (p.age % 2 == 0 || gridType == GridType.Triangles) {
         tattoo.q.add(new Point(p.q, p.r - 1, p));
         tattoo.q.add(new Point(p.q + 1, p.r, p));
         tattoo.q.add(new Point(p.q - 1, p.r + 1, p));
-      } else {
+      }
+      if (p.age % 2 == 1 || gridType == GridType.Triangles) {
         tattoo.q.add(new Point(p.q + 1, p.r - 1, p));
         tattoo.q.add(new Point(p.q, p.r + 1, p));
         tattoo.q.add(new Point(p.q - 1, p.r, p));
