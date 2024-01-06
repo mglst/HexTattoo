@@ -13,22 +13,22 @@ void setup() {
 
 void reset() {
   background(255);
-  tatoo = new Tatoo();
+  tattoo = new Tattoo();
 }
 
 void keyPressed() {
   if(key == 's'){
-    save("tatoo"+hour()+minute()+second()+".png");
+    save("tattoo"+hour()+minute()+second()+".png");
   }
   reset();
 }
 
-Tatoo tatoo;
+Tattoo tattoo;
 
-class Tatoo{
+class Tattoo{
   BitSet occupied;
   PriorityQueue<Point> q;
-  Tatoo(){
+  Tattoo(){
     occupied = new BitSet(mapsize);
     q = new PriorityQueue<Point>();
     q.add(new Point(0, 0, null));
@@ -39,31 +39,31 @@ void draw() {
   pushMatrix();
   translate(width*0.5, height*.5);
   for (int i = 0; i < 1; i++) {
-    while (!tatoo.q.isEmpty()) {
-      Point p = tatoo.q.poll();
+    while (!tattoo.q.isEmpty()) {
+      Point p = tattoo.q.poll();
       if (!inBounds(p)) continue;
-      if (tatoo.occupied.get(id(p))) continue;
-      tatoo.occupied.set(id(p));
+      if (tattoo.occupied.get(id(p))) continue;
+      tattoo.occupied.set(id(p));
       if (p.parent != null) {
         gradLine(p);
       }
       //for hex
       if(p.age % 2 == 0){
-        tatoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
-        tatoo.q.add(new Point(p.x-1, p.y, p));
-        tatoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.x-1, p.y, p));
+        tattoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
       }else{
-        tatoo.q.add(new Point(p.x+1, p.y, p));
-        tatoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
-        tatoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.x+1, p.y, p));
+        tattoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
+        tattoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
       }
       //for triangle
-      //tatoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
-      //tatoo.q.add(new Point(p.x-1, p.y, p));
-      //tatoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
-      //tatoo.q.add(new Point(p.x+1, p.y, p));
-      //tatoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
-      //tatoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
+      //tattoo.q.add(new Point(p.x+0.5, p.y+0.5*sqrt(3), p));
+      //tattoo.q.add(new Point(p.x-1, p.y, p));
+      //tattoo.q.add(new Point(p.x+0.5, p.y-0.5*sqrt(3), p));
+      //tattoo.q.add(new Point(p.x+1, p.y, p));
+      //tattoo.q.add(new Point(p.x-0.5, p.y+0.5*sqrt(3), p));
+      //tattoo.q.add(new Point(p.x-0.5, p.y-0.5*sqrt(3), p));
       if (p.parent != null) break;
     }
   }
